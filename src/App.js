@@ -1,12 +1,12 @@
-import React from "react";
-import Lang, {useLang} from "./context";
-import Screen from "./Screen"
+import React, {useReducer} from "react";
+// import Lang, {useLang} from "./context";
+// import Screen from "./context/Screen"
 // import UseInput from "./useInput/useInput";
 // import ChangeTabs from "./changeTabs/ChangeTabs";
 // import UseTitle from "./useTitle/useTitle";
 // import UseClick from "./useClick/useClick";
 // import UseConfirm from "./useConfirm/useConfirm";
-import translations from "./translations";
+// import translations from "./context/translations";
 /*
     index -> App -> Screen -> Header 순으로 트리 구조가 생성이 됨.
     원하는 것은 Header에 username의 값이 전달 되는 것임. 
@@ -22,14 +22,33 @@ import translations from "./translations";
             <UseTitle />
             <UseClick/>
             <UseConfirm/>
+            // const lang = useLang();
+    // provider로 전체를 덮기 전에는 Context변수 사용이 안되는건가? 이거는 한번 체크 해보기 
 */
+const INCRRESEMENT = "incresement";
+const DECRESEMENT = "decresement";
+
+const reducer = (state,action) => {
+    switch(action){
+        case INCRRESEMENT : 
+            return {count : state.count +1};
+        case DECRESEMENT : 
+            return {count : state.count -1};
+        default : 
+            throw Error();
+    }
+}
 
 function App() {
-    // const lang = useLang();
+    const [state, dispatch] = useReducer(reducer,{count : 0}); // useReducer의 2번째 파라미터는 state의 초기값.
+    // useReducer는 state의 값을 아예 "대체" 해버리는 것임. 값을 떼고 새로운 값을 붙인다는 의미. reducer함수의 reutrn 값을 state에 대체시킴.    
+    // dispatch는 type을 설정해주는 중요한 메서드
     return (
-        <Lang defaultLang="en" translations={translations} >
-            <Screen />
-        </Lang >
+        <div>
+            <h2>{state.count}</h2>
+            <button onClick= {() => dispatch(INCRRESEMENT)}>Add</button>
+            <button onClick= {() => dispatch(DECRESEMENT)}>Sub</button>
+        </div>
     );
 };
 
